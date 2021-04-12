@@ -163,4 +163,4 @@ We pass the address of the recipient and the ammount in parameters.
 
 The final result of our application:
 
-
+![image](https://user-images.githubusercontent.com/73957838/114333162-0af3b500-9b1e-11eb-8c02-88d64dcf3d9a.png)
