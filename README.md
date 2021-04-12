@@ -1,10 +1,10 @@
 # Project Goals
 - Create a local blockchain network with ganache;
 - Connect to localhost ganache network with metamask;
+- Create a intital app with create react app;
 - Set up an initial envinroment with truffle;
 - Create a ERC20 token with solidity;
 - Deploy the token;
-- Create a intital app with create react app;
 - Connect and manage the local blockchain accounts with web3.js;
 
 ## Create a local blockchain network with ganache
@@ -20,6 +20,15 @@ This is enough to build the application.
 [Metamask](https://metamask.io/) is a wallet for ethereum. 
 With this we can create a new account importing the private key from some address of ganache network.
 This way it's possible to use this address on our app.
+
+## Create a intital app with create react app
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
 
 ## Set up an initial envinroment with truffle
 
@@ -73,12 +82,85 @@ Our token will be very simple. Let's just pass a name, a symbol and set a ammoun
 that is connected to the network through the metamask.
 
 ## Deploy the token
+To deploy our token we need to create a new migration file, like this:
+```
+const MuscleToken = artifacts.require("MuscleToken");
 
-## Create a intital app with create react app
+module.exports = async function (deployer) {
+  await deployer.deploy(MuscleToken);  
+};
+```
+Now we can compile and deploy the ERC20 token. For this execute the follow commands:
+```
+truffle compile
+truffle migrate
+```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Did it you can see the contracts on ganache network.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Connect and manage the local blockchain accounts with web3.js
+We will do this using the ReactJs.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+When our React component be initialized we'll execute two functions:
+
+### loadWeb3() 
+
+```
+async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+      console.log("AQUI 1")
+    }
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+      console.log("AQUI 2")
+    }
+    else {
+      window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+    }
+}
+```
+
+This function is responsible for establishing the connection and authorizing us to interact with the blockchain.
+To work with our Token, we will need a new instance of Web3. When creating this instance, we need to specify the provider we want to use. Since we are using MetaMask as a proxy, we use the window.ethereum provider injected by the MetaMask extension.
+
+Ref: https://livecodestream.dev/post/interacting-with-smart-contracts-from-web-apps/
+
+## loadBlockchainData()
+
+```
+async loadBlockchainData() {
+    const web3 = window.web3
+    const accounts = await web3.eth.getAccounts()
+    this.setState({ account: accounts[0] })
+    console.log(accounts)
+    const muscleTokenAddress = "0xFeee1B17c0F4E0394270141aDfEaa7b8187d3360" // Replace MCL Address Here
+    const muscleToken = new web3.eth.Contract(MuscleToken.abi, muscleTokenAddress)
+    this.setState({ muscleToken: muscleToken })
+    const balance = await muscleToken.methods.balanceOf(this.state.account).call()
+    this.setState({ balance: web3.utils.fromWei(balance.toString(), 'Ether') })
+    const transactions = await muscleToken.getPastEvents('Transfer', { fromBlock: 0, toBlock: 'latest', filter: { from: this.state.account } })
+    this.setState({ transactions: transactions })
+    console.log(transactions)
+}
+```
+
+Here we have the web3 instance. With it it is possible to get our account.
+Next, we need to define the address of the token to obtain its reference.
+That done, we can get the balance and transactions from our account.
+
+We have another function which allow transferences between accounts.
+
+```
+transfer(recipient, amount) {
+    this.state.muscleToken.methods.transfer(recipient, amount).send({ from: this.state.account })
+}
+```
+We pass the address of the recipient and the ammount in parameters.
+
+# Result
+
+The final result of our application:
+
 

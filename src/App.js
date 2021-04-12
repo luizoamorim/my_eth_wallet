@@ -14,9 +14,11 @@ class App extends Component {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
       await window.ethereum.enable()
+      console.log("AQUI 1")
     }
     else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider)
+      console.log("AQUI 2")
     }
     else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
@@ -28,7 +30,7 @@ class App extends Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
     console.log(accounts)
-    const muscleTokenAddress = "0xFeee1B17c0F4E0394270141aDfEaa7b8187d3360" // Replace DAI Address Here
+    const muscleTokenAddress = "0xFeee1B17c0F4E0394270141aDfEaa7b8187d3360" // Replace MCL Address Here
     const muscleToken = new web3.eth.Contract(MuscleToken.abi, muscleTokenAddress)
     this.setState({ muscleToken: muscleToken })
     const balance = await muscleToken.methods.balanceOf(this.state.account).call()
