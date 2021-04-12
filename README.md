@@ -109,12 +109,10 @@ When our React component be initialized we'll execute two functions:
 async loadWeb3() {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum)
-      await window.ethereum.enable()
-      console.log("AQUI 1")
+      await window.ethereum.enable()      
     }
     else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider)
-      console.log("AQUI 2")
+      window.web3 = new Web3(window.web3.currentProvider)      
     }
     else {
       window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
@@ -164,3 +162,13 @@ We pass the address of the recipient and the ammount in parameters.
 The final result of our application:
 
 ![image](https://user-images.githubusercontent.com/73957838/114333162-0af3b500-9b1e-11eb-8c02-88d64dcf3d9a.png)
+
+# How to use
+Run:
+```
+npm run start
+```
+At this moment we'll be connected with the account that we imported on metamask.
+Choose another account on ganache and import it too on metamask wallet.
+So you can put this account on recipient address and put a value to transfer to it.
+Click on the button and the transfer will be triggered on metamask.
