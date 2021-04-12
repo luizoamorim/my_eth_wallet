@@ -172,3 +172,7 @@ At this moment we'll be connected with the account that we imported on metamask.
 Choose another account on ganache and import it too on metamask wallet.
 So you can put this account on recipient address and put a value to transfer to it.
 Click on the button and the transfer will be triggered on metamask.
+
+# References
+- I followed the steps shown in this video:
+https://www.youtube.com/watch?v=wSTbBIK8qrY&t=1091s
